@@ -21,6 +21,10 @@
   "devDependencies": {
     "browserify-shim": "^3.8.14",
     "three": "^0.85.2",
+    "voxel": "^0.5.0",
     "watchify": "^3.9.0"
+  },
+  "dependencies": {
+    "bottlejs": "^1.6.1"
   }
 }
