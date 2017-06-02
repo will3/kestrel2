@@ -1,5 +1,6 @@
 const container = require('../container');
 const Engine = require('../components/engine');
+const Turrent = require('../components/ship/turrent');
 
 const reader = (data, ship) => {
 	const lines = data.split('\n');
@@ -45,6 +46,12 @@ const reader = (data, ship) => {
 						ship: ship,
 						coord: [x, 0, z]
 					});
+				} else if (char === 'L') {
+					ship.turrents.push(new Turrent({
+						coord: [x, 0, z],
+						ship: ship,
+						type: 'L'
+					}));
 				}
 			}
 			z++;
@@ -62,9 +69,9 @@ const reader = (data, ship) => {
 	center[1] /= -result.hull.length;
 	center[2] /= -result.hull.length;
 	
-	center[0] += 0.5;
-	center[1] += 0.5;
-	center[2] += 0.5;
+	center[0] -= 0.5;
+	center[1] -= 0.5;
+	center[2] -= 0.5;
 
 	result.center = center;
 

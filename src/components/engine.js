@@ -40,6 +40,10 @@ class Engine {
     this.updateParticleSystem();
   }
 
+  destroy() {
+    this.app.destroy(this.particleSystem);
+  }
+
   updateParticleSystem() {
     this.particleSystem.position.copy(this.object.getWorldPosition());
     const rotation = this.object.getWorldRotation();
