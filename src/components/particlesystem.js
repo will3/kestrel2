@@ -11,6 +11,7 @@ class ParticleSystem {
 		this.materials = this.material.length > 0 ? this.material : [];
 		this.parent = props.parent || container.scene;
 		this.autoPlay = props.autoPlay === undefined ? true : props.autoPlay;
+		this.onParticle = props.onParticle;
 
 		this.particleProps = props.particleProps;
 
@@ -26,6 +27,8 @@ class ParticleSystem {
 		this.emit = this.emit.bind(this);
 		this.app = container.app;
 		this.position = new THREE.Vector3();
+
+		this.playing = false;
 	}
 
 	defaultParticleProps(obj) {
@@ -45,12 +48,14 @@ class ParticleSystem {
 
 	play() {
 		this.emit();
+		this.playing = true;
 	}
 
 	pause() {
 		if (this._timeout != null) {
 			clearTimeout(this._timeout);
 		}
+		this.playing = false;
 	}
 
 	emit() {
@@ -68,6 +73,10 @@ class ParticleSystem {
 			props = this.defaultParticleProps(this.particleProps());
 		}
 		const particle = this.app.add(Particle, props);
+		if (this.onParticle != null) {
+			this.onParticle(particle);
+		}
+		particle.initProps();
 		particle.object.position.copy(this.position);
 		this._timeout = setTimeout(this.emit, this.interval);
 	}

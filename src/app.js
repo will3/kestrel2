@@ -1,5 +1,6 @@
 const guid = require('./guid');
 const container = require('./container');
+const ee = require('event-emitter');
 
 const clone = (obj) => {
 	const c = {};
@@ -18,6 +19,9 @@ class App {
 		this.renderer = container.renderer;
 		this.animate = this.animate.bind(this);
 		
+		this.time = 0;
+		this.deltaTime = 1000 / 60;
+
 		container.app = this;
 	}
 
@@ -26,11 +30,13 @@ class App {
 		component._id = guid();
 		this.map[component._id] = component;
 		this._startMap[component._id] = component;
+		this.emit('add', component);
 		return component;
 	}
 
 	destroy(component) {
 		this._destroyMap[component._id] = component;
+		this.emit('destroy', component);
 	}
 
 	tick(dt) {
@@ -68,8 +74,13 @@ class App {
 	}
 
 	animate() {
-		const frameRate = 1000 / 60;
-		this.tick(frameRate / 1000);
+		const frameRate = 1 / 60;
+		
+		this.tick(frameRate);
+
+		this.time += frameRate;
+		this.deltaTime = frameRate;
+
 		requestAnimationFrame(this.animate);
 	}
 
@@ -77,5 +88,7 @@ class App {
 		this.animate();
 	}
 };
+
+ee(App.prototype);
 
 module.exports = new App();

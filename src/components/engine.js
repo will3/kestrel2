@@ -8,18 +8,21 @@ class Engine {
     this.scene = container.scene;
     this.app = container.app;
     this.particleVelocity = new THREE.Vector3();
+    this.amount = 0;
 
-    
     this.particleSystem = this.app.add(ParticleSystem, {
-      scale: [ ((r) => {
-      	return r + 1;
+      scale: [ ((p) => {
+      	return p._size;
       }), 0],
-      life: ((r) => {
-        return (r + 1) * 200;
+      life: ((p) => {
+        return p._size * 150;
       }),
-      interval: 20,
+      interval: 30,
       velocity: this.particleVelocity,
-      autoPlay: false
+      autoPlay: false,
+      onParticle: (p) => {
+        p._size = Math.random() + 1;
+      }
     });
   }
 
@@ -33,7 +36,6 @@ class Engine {
       .add(new THREE.Vector3(0, 0, 1));
 
     this.updateParticleSystem();
-    this.particleSystem.play();
   }
 
   tick(dt) {
@@ -45,6 +47,11 @@ class Engine {
   }
 
   updateParticleSystem() {
+    if (this.amount === 0 && this.particleSystem.playing) {
+      this.particleSystem.pause();
+    } else if (this.amount > 0 && !this.particleSystem.playing) {
+      this.particleSystem.play();
+    }
     this.particleSystem.position.copy(this.object.getWorldPosition());
     const rotation = this.object.getWorldRotation();
     const direction = new THREE.Vector3(0, 0, 1).applyEuler(rotation);

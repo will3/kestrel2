@@ -23,4 +23,36 @@ const randomQuaternion = () => {
 	return new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 0, 1), vector);
 };
 
-module.exports = { randomUnitVector, randomQuaternion };
+const normalizeAngle = (angle) => {
+	angle %= (Math.PI * 2);
+	if (angle > Math.PI) {
+		angle -= Math.PI * 2;
+	} else if (angle < -Math.PI) {
+		angle += Math.PI * 2;
+	}
+
+	return angle;
+};
+
+const clamp = (v, min, max) => {
+	if (v < min) {
+		return min;
+	} else if (v > max) {
+		return max;
+	}
+	return v;
+};
+
+const linearBillboard = (camera, object, dir, quaternion) => {
+	const a = object.position.clone().sub(camera.position).normalize();
+	const b = a.clone().projectOnPlane(dir).normalize();
+	const c = new THREE.Vector3(0, 0, 1).applyQuaternion(quaternion);
+
+	const quat2 = new THREE.Quaternion().setFromUnitVectors(c, b);
+
+	object.quaternion.copy(new THREE.Quaternion());
+	object.quaternion.multiply(quat2);
+	object.quaternion.multiply(quaternion);
+}
+
+module.exports = { randomUnitVector, randomQuaternion, normalizeAngle, clamp, linearBillboard };

@@ -25,6 +25,7 @@
     "watchify": "^3.9.0"
   },
   "dependencies": {
-    "bottlejs": "^1.6.1"
+    "bottlejs": "^1.6.1",
+    "event-emitter": "^0.3.5"
   }
 }

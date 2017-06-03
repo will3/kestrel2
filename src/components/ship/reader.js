@@ -1,6 +1,8 @@
-const container = require('../container');
-const Engine = require('../components/engine');
-const Turrent = require('../components/ship/turrent');
+const container = require('../../container');
+const Engine = require('../engine');
+const Turrent = require('./turrent');
+const Beam = require('../beam');
+const Laser = require('../laser');
 
 const reader = (data, ship) => {
 	const lines = data.split('\n');
@@ -42,15 +44,21 @@ const reader = (data, ship) => {
 			for (let x = 0; x < line.length; x++) {
 				char = line[x];
 				if (char === 'E') {
-					app.add(Engine, {
+					const engine = app.add(Engine, {
 						ship: ship,
 						coord: [x, 0, z]
 					});
-				} else if (char === 'L') {
+					engines.push(engine);
+				} else if (char === 'L' || char === 'l') {
+					const type = Laser;
+					const cooldown = 0.1;
+					const reloadTime = 1.0;
+					const clip = 5;
+
 					ship.turrents.push(new Turrent({
 						coord: [x, 0, z],
 						ship: ship,
-						type: 'L'
+						type, cooldown, reloadTime, clip
 					}));
 				}
 			}

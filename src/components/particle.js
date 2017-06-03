@@ -13,8 +13,7 @@ class Value {
 		if (Array.isArray(value)) {
 			const values = value.map((v) => {
 				if (typeof v === 'function') {
-					const r = this.object.r;
-					return v(r);
+					return v(this.object);
 				}
 				return v;
 			});
@@ -37,8 +36,7 @@ class Value {
 		if (this.isNumber) {
 			return this.value;
 		} else if (this.isFunc) {
-			const r = this.object.r;
-			return this.value(r);
+			return this.value(this.object);
 		} else if (this.intervals.length > 0) {
 			let interval;
 			if (t > 1) {
@@ -61,13 +59,17 @@ class Value {
 
 class Particle {
 	constructor(props) {
-		this.r = Math.random();
-		this.life = new Value(props.life, this);
-		this.velocity = props.velocity;
+		this.props = props;
+
 		this.parent = props.parent;
-		this.scale = new Value(props.scale, this);
 		this.object = new THREE.Sprite(props.material);
 		this.app = container.app;
+	}
+
+	initProps() {
+		this.life = new Value(this.props.life, this);
+		this.velocity = this.props.velocity;
+		this.scale = new Value(this.props.scale, this);
 	}
 
 	start() {
@@ -85,8 +87,6 @@ class Particle {
 		if (new Date().getTime() > this.timer) {
 			this.app.destroy(this);
 		}
-
-		this.r = Math.random();
 	}
 
 	destroy() {
