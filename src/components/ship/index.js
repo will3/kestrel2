@@ -44,14 +44,13 @@ class Ship {
 		});
 
 		this.side = props.side || 0;
+
+		this.hull = [];
+		this.center = new THREE.Vector3();
 	}
 
 	get position() {
 		return this.object.position;
-	}
-
-	get innerPosition() {
-		return this.innerObject.getWorldPosition();
 	}
 
 	get rotation() {
@@ -66,7 +65,6 @@ class Ship {
 		this.scene.add(this.object);
 	
 		const result = reader(this.props.data, this);
-		this.hull = result.hull;
 
 		this.ai.start();
 	}

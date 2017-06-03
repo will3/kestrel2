@@ -15,7 +15,6 @@ const reader = (data, ship) => {
 	let char;
 
 	const result = {
-		hull: [],
 		modules: []
 	};
 
@@ -36,7 +35,7 @@ const reader = (data, ship) => {
 
 				if (char === '0') {
 					chunks.set(x, 0, z, 1);
-					result.hull.push([x, 0, z, 1]);
+					ship.hull.push([x, 0, z, 1]);
 				}
 			}
 			z++;
@@ -67,23 +66,23 @@ const reader = (data, ship) => {
 	}
 
 	const center = [ 0, 0, 0 ];
-	for (let i = 0; i < result.hull.length; i++) {
-		const v = result.hull[i];
+	for (let i = 0; i < ship.hull.length; i++) {
+		const v = ship.hull[i];
 		center[0] += v[0];
 		center[1] += v[1];
 		center[2] += v[2];
 	}
-	center[0] /= -result.hull.length;
-	center[1] /= -result.hull.length;
-	center[2] /= -result.hull.length;
+	center[0] /= ship.hull.length;
+	center[1] /= ship.hull.length;
+	center[2] /= ship.hull.length;
 	
-	center[0] -= 0.5;
-	center[1] -= 0.5;
-	center[2] -= 0.5;
+	center[0] += 0.5;
+	center[1] += 0.5;
+	center[2] += 0.5;
 
-	result.center = center;
+	ship.center.fromArray(center);
 
-	ship.innerObject.position.fromArray(center);
+	ship.innerObject.position.fromArray(center).multiplyScalar(-1);
 
 	return result;
 };

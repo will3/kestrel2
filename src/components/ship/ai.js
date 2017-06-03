@@ -27,7 +27,7 @@ class AI {
 			return;
 		}
 
-		this.ship.orbit(this.target.position, 50);
+		// this.ship.orbit(this.target.position, 50);
 
 		// demo
 		// this.ascend(10);
@@ -35,7 +35,7 @@ class AI {
 		for (let i = 0; i < this.ship.turrents.length; i ++) {
 			const turrent = this.ship.turrents[i];
 			turrent.fire({
-				position: this.target.innerPosition,
+				position: this.target.position,
 				velocity: this.target.velocity
 			});
 		}
