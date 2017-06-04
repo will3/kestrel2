@@ -11,18 +11,23 @@ class Grid {
   }
 
   start() {
-    // for (let i = 0; i < 10; i++) {
-    //   for (let j = 0; j < 10; j++) {
+    const width = 10;
+    const height = 20;
+    for (let i = 0; i < width; i++) {
+      for (let j = 0; j < height; j++) {
 
-    //     const sprite = new THREE.Sprite();
-    //     const screen = this.hexToScreen(i, j);
-    //     sprite.position.x = screen[0] * 10;
-    //     sprite.position.z = screen[1] * 10;
+        const sprite = new THREE.Sprite();
+        const screen = this.hexToScreen(i - width / 2, j - height / 2);
+        sprite.position.x = screen[0] * 10;
+        sprite.position.z = screen[1] * 10;
 
-    //     this.scene.add(sprite);
+        this.scene.add(sprite);
+      }
+    }
+  }
 
-    //   }
-    // }
+  place(ships, side) {
+
   }
 }
 

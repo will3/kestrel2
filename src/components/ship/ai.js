@@ -27,7 +27,7 @@ class AI {
 			return;
 		}
 
-		// this.ship.orbit(this.target.position, 50);
+		this.ship.orbit(this.target.position, 100);
 
 		// demo
 		// this.ascend(10);

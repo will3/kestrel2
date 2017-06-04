@@ -1,6 +1,7 @@
 const guid = require('./guid');
-const container = require('./container');
 const ee = require('event-emitter');
+const renderer = require('./renderer');
+const Collisions = require('./collisions');
 
 const clone = (obj) => {
 	const c = {};
@@ -16,13 +17,13 @@ class App {
 		this._startMap = {};
 		this._destroyMap = {};
 
-		this.renderer = container.renderer;
+		this.renderer = renderer;
+		this.collisions = new Collisions({ app: this });
+
 		this.animate = this.animate.bind(this);
 		
 		this.time = 0;
-		this.deltaTime = 1000 / 60;
-
-		container.app = this;
+		this.delta = 1000 / 60;
 	}
 
 	add(type, props) {
@@ -40,6 +41,8 @@ class App {
 	}
 
 	tick(dt) {
+		this.collisions.tick();
+		
 		let id, component;
 
 		const _startMap = clone(this._startMap);
@@ -79,7 +82,7 @@ class App {
 		this.tick(frameRate);
 
 		this.time += frameRate;
-		this.deltaTime = frameRate;
+		this.delta = frameRate;
 
 		requestAnimationFrame(this.animate);
 	}

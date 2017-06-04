@@ -1,11 +1,13 @@
 const Bottle = require('bottlejs');
-const renderer = require('./renderer');
+const app = require('./core/app');
 
 const bottle = new Bottle();
 const container = bottle.container;
 
-container.renderer = renderer;
-container.scene = renderer.scene;
-container.camera = renderer.camera;
+container.app = app;
+container.renderer = app.renderer;
+container.collisions = app.collisions;
+container.scene = app.renderer.scene;
+container.camera = app.renderer.camera;
 
 module.exports = container;

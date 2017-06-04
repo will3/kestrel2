@@ -1,32 +1,28 @@
-const app = require('./app');
+const app = require('./core/app');
+const container = require('./container');
 const Ship = require('./components/ship');
 const DragCamera = require('./components/dragcamera');
 const Asteroid = require('./components/asteroid');
 const Grid = require('./components/grid');
 const Ships = require('./components/ship/ships');
+const Fleet = require('./fleet');
 
 app.start();
-
-const frigate = require('./ships/frigate');
-
 app.add(Ships);
 
+const frigate = require('./ships/frigate');
 const ship = app.add(Ship, { 
 	data: frigate, 
-	side: '0',
-	rotation: new THREE.Euler(0, Math.random() * Math.PI * 2) });
-ship.position.x = (Math.random() - 0.5) * 100;
-ship.position.z = (Math.random() - 0.5) * 100;
+	side: '0' });
 
-const ship2 = app.add(Ship, { 
-	data: frigate, 
-	side: '1',
-	rotation: new THREE.Euler(0, Math.random() * Math.PI * 2) });
-ship2.position.x = (Math.random() - 0.5) * 100;
-ship2.position.z = (Math.random() - 0.5) * 100;
+const fleet = new Fleet({
+	ships: [ship]
+});
+container.fleet = fleet;
 
-// app.add(Asteroid);
+const grid = app.add(Grid);
+
+grid.place(fleet.ships);
+
 const dragCamera = app.add(DragCamera);
 dragCamera.distance = 200;
-
-app.add(Grid);

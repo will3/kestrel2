@@ -13,6 +13,9 @@ class Ship {
 
 		this.props = props;
 		this.scene = container.scene;
+		this.app = container.app;
+		this.collisions = container.collisions;
+
 		this.object = new THREE.Object3D();
 		this.object.rotation.order = 'YXZ';
 
@@ -33,9 +36,11 @@ class Ship {
 		this.turnAmount = 0;
 		this.forwardAmount = 0;
 		this.maxTurnSpeed = 0.03;
-		this.power = 0.4;
+		this.power = 6;
 
 		this.velocity = new THREE.Vector3();
+
+		this.friction = 0.5;
 
 		this.hull = [];
 
@@ -47,6 +52,18 @@ class Ship {
 
 		this.hull = [];
 		this.center = new THREE.Vector3();
+
+		this.onCollision = this.onCollision.bind(this);
+		this.body = {
+			type: 'mesh',
+			onCollision: this.onCollision,
+			mesh: this.innerObject,
+			entity: this
+		}
+	}
+
+	onCollision(collision) {
+
 	}
 
 	get position() {
@@ -67,9 +84,17 @@ class Ship {
 		const result = reader(this.props.data, this);
 
 		this.ai.start();
+
+		this.collisions.add(this.body);
 	}
 
-	tick(dt) {
+	destroy() {
+		this.scene.remove(this.object);
+		this.collisions.remove(this.body);
+	}
+
+	tick() {
+		const dt = this.app.delta;
 		this.ai.tick(dt);
 		mesher(this.chunks, this.innerObject, this.material);
 
@@ -113,9 +138,9 @@ class Ship {
 			.multiplyScalar(this.forwardAmount * this.power * dt);
 
 		this.velocity.add(acc);
-		this.object.position.add(this.velocity);
+		this.object.position.add(this.velocity.clone().multiplyScalar(dt));
 
-		this.velocity.multiplyScalar(0.97);
+		this.velocity.multiplyScalar(Math.pow(this.friction, dt));
 
 		this.engines.forEach((engine) => {
 			engine.amount = this.forwardAmount;
@@ -202,10 +227,6 @@ class Ship {
 		const angle = Math.atan2(point.x - this.object.position.x, point.z - this.object.position.z) - Math.PI;
 		const angleDiff = angle - this.object.rotation.y;
 		return normalizeAngle(angleDiff);
-	}
-
-	destroy() {
-
 	}
 }
 

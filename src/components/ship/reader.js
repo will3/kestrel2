@@ -52,7 +52,7 @@ const reader = (data, ship) => {
 					const type = Laser;
 					const cooldown = 0.1;
 					const reloadTime = 1.0;
-					const clip = 5;
+					const clip = 3;
 
 					ship.turrents.push(new Turrent({
 						coord: [x, 0, z],
