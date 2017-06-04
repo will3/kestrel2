@@ -26,6 +26,8 @@
   },
   "dependencies": {
     "bottlejs": "^1.6.1",
-    "event-emitter": "^0.3.5"
+    "event-emitter": "^0.3.5",
+    "knuth-shuffle": "^1.0.1",
+    "perlin": "^1.0.0"
   }
 }
