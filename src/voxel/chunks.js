@@ -30,6 +30,7 @@ class Chunks {
 			};
 		}
 		region.dirty = true;
+		this.dirty = true;
 
 		region.chunk.set(i - origin[0], j - origin[1], k - origin[2], v);
 	}

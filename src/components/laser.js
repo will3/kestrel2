@@ -14,14 +14,15 @@ class Laser {
 
     this.speed = 200;
 
-    this.life = 10000;
+    this.life = 1000;
 
     this.onCollision = this.onCollision.bind(this);
 
     this.body = {
       type: 'ray',
       raycaster: new THREE.Raycaster(),
-      onCollision: this.onCollision
+      onCollision: this.onCollision,
+      entity: this
     };
   }
 

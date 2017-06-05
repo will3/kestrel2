@@ -11,6 +11,16 @@ class AI {
 	}
 
 	think() {
+		this.ship.orbit(new THREE.Vector3(0, 0, 0), 100);
+
+		for (let i = 0; i < this.ship.turrents.length; i ++) {
+			const turrent = this.ship.turrents[i];
+			turrent.fire({
+				position: new THREE.Vector3(),
+				velocity: new THREE.Vector3()
+			});
+		}
+
 		if (this.target == null) {
 			const ships = this.ships.getTargets(this.ship);
 

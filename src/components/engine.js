@@ -47,6 +47,7 @@ class Engine {
   }
 
   updateParticleSystem() {
+    this.particleSystem.amount = Math.abs(this.amount);
     if (this.amount === 0 && this.particleSystem.playing) {
       this.particleSystem.pause();
     } else if (this.amount > 0 && !this.particleSystem.playing) {

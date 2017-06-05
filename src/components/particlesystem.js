@@ -29,6 +29,8 @@ class ParticleSystem {
 		this.position = new THREE.Vector3();
 
 		this.playing = false;
+
+		this.amount = 1;
 	}
 
 	defaultParticleProps(obj) {
@@ -78,7 +80,7 @@ class ParticleSystem {
 		}
 		particle.initProps();
 		particle.object.position.copy(this.position);
-		this._timeout = setTimeout(this.emit, this.interval);
+		this._timeout = setTimeout(this.emit, this.interval / this.amount);
 	}
 }
 

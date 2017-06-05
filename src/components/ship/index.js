@@ -36,7 +36,7 @@ class Ship {
 		this.turnAmount = 0;
 		this.forwardAmount = 0;
 		this.maxTurnSpeed = 0.03;
-		this.power = 6;
+		this.power = 10;
 
 		this.velocity = new THREE.Vector3();
 
@@ -57,13 +57,19 @@ class Ship {
 		this.body = {
 			type: 'mesh',
 			onCollision: this.onCollision,
-			mesh: this.innerObject,
 			entity: this
 		}
 	}
 
 	onCollision(collision) {
-
+		const dt = this.app.delta;
+		const entity = collision.body.entity;
+		if (entity.__isAsteroid || entity.__isShip) {
+			this.velocity.add(
+				this.position.clone().sub(entity.position).normalize()
+				.multiplyScalar((collision.minDis - collision.dis) * dt * 10)
+			);
+		}
 	}
 
 	get position() {
@@ -86,6 +92,16 @@ class Ship {
 		this.ai.start();
 
 		this.collisions.add(this.body);
+
+		mesher(this.chunks, this.innerObject, this.material);
+
+		const collisionGeometry = new THREE.Geometry();
+
+		this.innerObject.children.forEach((mesh) => {
+			collisionGeometry.mergeMesh(mesh);
+		});
+
+		this.body.mesh = new THREE.Mesh(collisionGeometry);
 	}
 
 	destroy() {
@@ -145,6 +161,8 @@ class Ship {
 		this.engines.forEach((engine) => {
 			engine.amount = this.forwardAmount;
 		});
+
+		this.body.mesh.position.copy(this.position);
 	}
 
 	ascend(y) {
@@ -190,7 +208,7 @@ class Ship {
 
 	align(point) {
 		const angleDiff = this.getAngleDiff(point);
-		const desiredTurnSpeed = angleDiff;
+		const desiredTurnSpeed = angleDiff * 0.1;
 
 		let desiredTurnAmount = desiredTurnSpeed / this.maxTurnSpeed;
 		if (desiredTurnAmount > 1) {

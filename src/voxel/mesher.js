@@ -31,6 +31,10 @@ const meshRegion = (region, object, material) => {
 };
 
 const meshChunks = (chunks, object, material) => {
+	if (!chunks.dirty) {
+		return;
+	}
+	
 	let id, region;
 	for (id in chunks.map) {
 		region = chunks.map[id];
@@ -39,6 +43,7 @@ const meshChunks = (chunks, object, material) => {
 			region.dirty = false;
 		}
 	}
+	chunks.dirty = false;
 };
 
 module.exports = meshChunks;

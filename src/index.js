@@ -5,27 +5,27 @@ const DragCamera = require('./components/dragcamera');
 const Asteroid = require('./components/asteroid');
 const Grid = require('./components/grid');
 const Ships = require('./components/ship/ships');
-const Fleet = require('./fleet');
+const Stars = require('./components/stars');
 
 app.start();
 app.add(Ships);
 
+const dragCamera = app.add(DragCamera);
+container.dragCamera = dragCamera;
+dragCamera.distance = 200;
+
+app.add(Stars);
+
 const frigate = require('./ships/frigate');
-const ship = app.add(Ship, { 
+app.add(Ship, { 
 	data: frigate, 
 	side: '0' });
 
-const fleet = new Fleet({
-	ships: [ship]
-});
-container.fleet = fleet;
+// app.add(Ship, { 
+// 	data: frigate, 
+// 	side: '1' });
 
 const grid = app.add(Grid);
-
-grid.place(fleet.ships);
-
-const dragCamera = app.add(DragCamera);
-dragCamera.distance = 200;
 
 const noise = require('perlin').noise;
 noise.seed(Math.random());
@@ -44,9 +44,11 @@ for (let i = 0; i < grid.width; i++) {
 			ratio = 0;
 		}
 
-		const n1 = noise.simplex2(coord[0] * 0.005, coord[1] * 0.005);
+		const n1 = noise.simplex2(coord[0] * 0.005, coord[1] * 0.005) * 0.7;
 		const n2 = noise.simplex2(coord[0] * 0.1, coord[1] * 0.1) * 0.7;
-		const n = (n1 + n2) * ratio;
+
+		const n3 = noise.simplex2(coord[0] * 0.0025, coord[1] * 0.0025) * 0.7;
+		const n = (n1 + n2 + n3) * ratio;
 
 		if (n > 0.7) {
 			const size = n > 0.95 ? 4 : n > 0.9 ? 3 : n > 0.8 ? 2 : 1;
@@ -94,11 +96,11 @@ for (let id in asteroids) {
 	});
 }
 
-// const ambientLight = new THREE.AmbientLight(0xAAAAAA);
-// const directionalLight = new THREE.DirectionalLight(0xffffff, 0.7);
-// directionalLight.position.set(0.5, 1.0, 0.3);
+const ambientLight = new THREE.AmbientLight(0xAAAAAA);
+const directionalLight = new THREE.DirectionalLight(0xffffff, 0.7);
+directionalLight.position.set(0.5, 1.0, 0.3);
 
-// const scene = app.renderer.scene;
+const scene = app.renderer.scene;
 
-// scene.add(ambientLight);
-// scene.add(directionalLight);
+scene.add(ambientLight);
+scene.add(directionalLight);
